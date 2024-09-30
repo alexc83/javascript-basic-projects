@@ -13,6 +13,7 @@ const newColor = () => {
 
 const changeColor = (nextColor) => {
     body.style.backgroundColor = nextColor;
+	color.textContent = nextColor;
 }
 
 
@@ -20,5 +21,6 @@ const changeColor = (nextColor) => {
 btn.addEventListener('click', () => {
     const nextColor = newColor();
     changeColor(nextColor);
+	
 
 })
