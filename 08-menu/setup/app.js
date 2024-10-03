@@ -75,40 +75,66 @@ const menu = [
 
 // selections
 const sectionCenter = document.querySelector(".section-center");
-const filterBtns = document.querySelectorAll(".filter-btn");
+const buttonContainer = document.querySelector(".btn-container");
 
 // function
 const displayMenuItems = (menuItems) => {
+  // clear the html
+  sectionCenter.innerHTML = "";
+
   menuItems.forEach((item) => {
-    if (item["id"] === 1) {
-      // bypass since data is already there for item 1
-    } else {
-      sectionCenter.insertAdjacentHTML(
-        "beforeend",
-        `<article class="menu-item">
-          <img src="${item["img"]}" class="photo" alt="menu item" />
-          <div class="item-info">
-            <header>
-              <h4>${item["title"]}</h4>
-              <h4 class="price">$${item["price"]}</h4>
-            </header>
-            <p class="item-text">${item["desc"]}</p>
-          </div>
-        </article>`
-      );
-    }
+    sectionCenter.insertAdjacentHTML(
+      "beforeend",
+      `<article class="menu-item">
+        <img src="${item["img"]}" class="photo" alt="menu item" />
+        <div class="item-info">
+          <header>
+            <h4>${item["title"]}</h4>
+            <h4 class="price">$${item["price"]}</h4>
+          </header>
+          <p class="item-text">${item["desc"]}</p>
+        </div>
+      </article>`
+    );
+  });
+};
+const displayButtons = (menuItems) => {
+  // all category
+  buttonContainer.insertAdjacentHTML(
+    "beforeend",
+    `<button class="filter-btn" type="button" data-id="all">all</button>`
+  );
+
+  // unique categories
+  const uniqueCategories = new Set(menuItems.map((item) => item.category));
+  uniqueCategories.forEach((category) => {
+    buttonContainer.insertAdjacentHTML(
+      "beforeend",
+      `<button class="filter-btn" type="button" data-id="${category}">${category}</button>`
+    );
+  });
+
+  // select buttons
+  const filterBtns = document.querySelectorAll(".filter-btn");
+
+  // click buttons
+  filterBtns.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const buttonType = event.currentTarget.dataset.id;
+      if (buttonType === "all") {
+        displayMenuItems(menu);
+      } else {
+        const menuAdj = menu.filter((item) => {
+          return item.category === buttonType;
+        });
+        displayMenuItems(menuAdj);
+      }
+    });
   });
 };
 
 // when page loads
 window.addEventListener("DOMContentLoaded", () => {
   displayMenuItems(menu);
-});
-
-// click buttons
-filterBtns.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    const buttonType = event.currentTarget.dataset.id;
-    console.log(buttonType);
-  });
+  displayButtons(menu);
 });
